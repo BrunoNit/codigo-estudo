@@ -1,0 +1,28 @@
+package demo
+import br.com.pueyo.drools.Account
+
+rule "accountBalanceOk"
+  when
+  	$account : Account( balance >= 100 )
+  then
+ 	modify($account){
+  		withdraw(10);
+  	}
+  	System.out.println("Saque Realizado -  Saldo: " + $account.getBalance());
+end
+rule "pegaEmprestimo"
+  when
+  	$account : Account( balance < 100 && emprestimo < 2)
+  then
+  	System.out.println("Iniciar pedido Emprestimo");
+ 	modify($account){
+  		depositaEmprestimo(100);
+  	}
+  	System.out.println("Emprestimo Realizado");
+end
+rule "verificaEmprestimo" salience 1
+  when
+  	$account : Account( balance < 100 && emprestimo >= 2)
+  then
+   	System.out.println("Acabou!!! Para de gastar");
+end
